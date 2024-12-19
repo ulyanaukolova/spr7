@@ -1,0 +1,27 @@
+name: Check Style Code
+
+on:
+  push:
+    branches:
+      - new_vetochka
+  pull_request:
+    branches:
+      - new_vetochka
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: Restore dependencies
+      run: nuget restore TaskManagement.sln
+
+    - name: Build and Analyze
+      run: |
+        msbuild TaskManagement.sln /p:Configuration=Release /p:RunCodeAnalysis=true
